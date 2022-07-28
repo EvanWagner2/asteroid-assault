@@ -13,9 +13,20 @@ basic.forever(function(){
 while(asteroid.get(LedSpriteProperty.Y)<4){
     asteroid.change(LedSpriteProperty.Y, 1);
     basic.pause(delay)
+// check for laser collisions 
+    if(laser != null && laser.isTouching(asteroid)){
+        asteroid.delete();
+        laser.delete();
+    }
 }
 // speed up asteroids
 delay = delay - delay /10;
+if(player.isTouching(asteroid)){
+    game.gameOver()
+}else{
+    asteroid.delete()
+    game.addScore(1)
+}
 })
 
 // player controls
@@ -39,7 +50,18 @@ input.onButtonPressed(Button.AB, function() {
     while(laser.get(LedSpriteProperty.Y)>= 1){
         laser.change(LedSpriteProperty.Y, -1);
         basic.pause(50);
+
+        if (laser != null && laser.isTouching(asteroid)) {
+            asteroid.delete();
+            laser.delete();
+        }
     }
     laser.delete();
 })
+})
+
+basic.forever(function() {
+    if(game.isGameOver()&& input.buttonIsPressed(Button.A)){
+        control.reset()
+    }
 })
